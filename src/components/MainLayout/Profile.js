@@ -1,7 +1,7 @@
 import { MainLayout } from "./index";
-import { useFetchUser } from "utils/user";
+import { useFetchUser } from "../utils/user";
 import Router from "next/router";
-let flag = true;
+
 export default function Profile() {
   const { user, loading } = useFetchUser();
 
@@ -12,11 +12,8 @@ export default function Profile() {
       </MainLayout>
     );
   }
-  console.log(user, loading);
-  if (!user && !loading && flag) {
-    console.log("hit!");
+  if (!user && !loading) {
     Router.replace("/");
-    flag = false;
   }
 
   return (
