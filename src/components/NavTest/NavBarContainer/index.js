@@ -1,18 +1,21 @@
-import React from 'react'
+import React from "react";
+import { useFetchUser } from "utils/user";
 
 function NavTest({ children }) {
+  const { user, loading } = useFetchUser();
+  console.log(user);
   return (
     <div>
-      <header className="lg:px-16 px-6 bg-white flex flex-wrap items-center lg:py-0 py-2">
+      <header className="lg:px-16 px-6 bg-gray-900  flex flex-wrap items-center lg:py-0 py-2">
         <div className="flex-1 flex justify-between items-center">
-          <a href="/" className="text-black">
+          <a href="/" className="text-white">
             Vanquisher
           </a>
         </div>
 
         <label htmlFor="menu-toggle" className="pointer-cursor lg:hidden block">
           <svg
-            className="fill-current text-gray-900"
+            className="fill-current text-white"
             xmlns="http://www.w3.org/2000/svg"
             width="20"
             height="20"
@@ -46,7 +49,7 @@ function NavTest({ children }) {
         </div>
       </header>
     </div>
-  )
+  );
 }
 
-export default NavTest
+export default NavTest;
