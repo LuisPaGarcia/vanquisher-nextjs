@@ -3,7 +3,7 @@ import { useFetchUser } from "utils/user";
 
 function NavTest({ children }) {
   const { user, loading } = useFetchUser();
-  console.log(user);
+
   return (
     <div>
       <header className="lg:px-16 px-6 bg-gray-900  flex flex-wrap items-center lg:py-0 py-2">
@@ -42,8 +42,8 @@ function NavTest({ children }) {
           >
             <img
               className="rounded-full w-10 h-10 border-2 border-transparent hover:border-indigo-400"
-              src="https://pbs.twimg.com/profile_images/1128143121475342337/e8tkhRaz_normal.jpg"
-              alt="Andy Leverenz"
+              src={user && user.picture && !loading ? user.picture : null}
+              alt={user && user.name && !loading ? user.name : null}
             />
           </a>
         </div>

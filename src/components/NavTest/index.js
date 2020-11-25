@@ -1,8 +1,7 @@
-import React /*, { useContext }*/ from "react";
+import React from "react";
 import NavItem from "./NavItem/index";
 import NavBarContainer from "./NavBarContainer";
 import Link from "next/link";
-// import { Context } from "../stores";
 
 function NavTest() {
   return (
