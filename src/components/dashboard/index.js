@@ -1,7 +1,7 @@
 import React from "react";
 import NavTest from "components/NavTest";
 import Image from "next/image";
-
+import Data from "components/Data";
 function Dashboard(props) {
   return (
     <>
@@ -15,6 +15,7 @@ function Dashboard(props) {
         height="400"
         alt="dog picture"
       />
+      <Data />
     </>
   );
 }
