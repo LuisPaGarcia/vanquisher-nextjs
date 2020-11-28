@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "SET NODE_OPTIONS='--http-server-default-timeout=0' && next dev",
     "build": "next build",
-    "start": "NODE_OPTIONS='--http-server-default-timeout=0' next start"
+    "start": "SET NODE_OPTIONS='--http-server-default-timeout=0' && next start"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^0.16.0",
