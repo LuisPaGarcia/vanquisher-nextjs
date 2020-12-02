@@ -2,20 +2,21 @@ import React from "react";
 import NavTest from "components/NavTest";
 import Image from "next/image";
 import Data from "components/Data";
+import Table from "components/Table";
+import Details from "components/Details";
 function Dashboard(props) {
   return (
     <>
       <NavTest />
-      <h1 className="text-3xl text-center pt-4 text-white bg-gray-800">
-        Dashboard
-      </h1>
-      <Image
-        src="/static/dog.jpeg"
-        width="400"
-        height="400"
-        alt="dog picture"
-      />
-      <Data />
+      <main className="flex-1 overflow-x-hidden overflow-y-auto">
+        <div className="container mx-auto px-6 py-8">
+          <h3 className="text-white text-3xl font-medium">Dashboard</h3>
+
+          <Data />
+          <Details />
+          <Table />
+        </div>
+      </main>
     </>
   );
 }
