@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 function HeroSection() {
   const [mobileMenuOpen, mobileMenuOpenSet] = useState(false);
@@ -92,26 +93,14 @@ function HeroSection() {
                   Company
                 </a>
 
-                <a
-                  href="#"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
-                >
-                  Log in
-                </a>
+                <Link href="/api/login">
+                  <a className="font-medium text-indigo-600 hover:text-indigo-500">
+                    Log in
+                  </a>
+                </Link>
               </div>
             </nav>
           </div>
-
-          {/* <!--
-        Mobile menu, show/hide based on menu open state.
-
-        Entering: "duration-150 ease-out"
-          From: "opacity-0 scale-95"
-          To: "opacity-100 scale-100"
-        Leaving: "duration-100 ease-in"
-          From: "opacity-100 scale-100"
-          To: "opacity-0 scale-95"
-      --> */}
           {mobileMenuOpen && (
             <div className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden">
               <div className="rounded-lg shadow-md bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
@@ -188,13 +177,14 @@ function HeroSection() {
                     </a>
                   </div>
                   <div role="none">
-                    <a
-                      href="#"
-                      className="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
-                      role="menuitem"
-                    >
-                      Log in
-                    </a>
+                    <Link href="/api/login">
+                      <a
+                        className="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
+                        role="menuitem"
+                      >
+                        Log in
+                      </a>
+                    </Link>
                   </div>
                 </div>
               </div>
