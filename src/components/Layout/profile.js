@@ -4,6 +4,7 @@ import Router from "next/router";
 import Login from "components/Login";
 import HeroSection from "components/HeroSection";
 import Divisor from "components/Divisor";
+import useDocumentTitle from "utils/hooks/useDocumentTitle";
 let flag = true;
 export default function Profile() {
   const { user, loading } = useFetchUser();
@@ -20,7 +21,7 @@ export default function Profile() {
     Router.replace("/");
     flag = false;
   }
-
+  useDocumentTitle("Vanquisher Home");
   return (
     <MainLayout>
       <HeroSection />

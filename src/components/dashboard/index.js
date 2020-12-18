@@ -4,7 +4,10 @@ import Image from "next/image";
 import Data from "components/Data";
 import Table from "components/Table";
 import Details from "components/Details";
+import useDocumentTitle from "utils/hooks/useDocumentTitle";
 function Dashboard(props) {
+  useDocumentTitle("Dashboard | Vanquisher");
+
   return (
     <>
       <NavTest />
