@@ -1,301 +1,310 @@
-import React from "react";
+import React, { useState } from "react";
 import useDocumentTitle from "utils/hooks/useDocumentTitle";
 import useToggle from "utils/hooks/useToggle";
 import { useFetchUser } from "utils/user";
+import { Transition } from "@headlessui/react";
+import Link from "next/link";
 
 function Dashboard(props) {
   useDocumentTitle("Dashboard | Vanquisher");
+  const [navBarMobileToggle, navBarMobileToggleSet] = useToggle(); // navbarMobile
+  const [userDropdownToggle, userDropdownToggleSet] = useToggle(); // userDropdown
   const { user, loading } = useFetchUser();
-  const [headerProfileDropdown, headerProfileDropdownSet] = useToggle();
-  const [toggleMobileNavbar, toggleMobileNavbarSet] = useToggle();
-  console.log({ user });
+  const userImage = !loading && user && user.picture ? user.picture : null;
+  const userName = !loading && user && user.name ? user.name : null;
+
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100">
       {/* Off-canvas menu for mobile, show/hide based on off-canvas menu state. */}
       <div className="lg:hidden">
-        {toggleMobileNavbar && (
-          <div className="fixed inset-0 flex z-40">
-            {/*
-              Off-canvas menu overlay, show/hide based on off-canvas menu state.
-
-              Entering: "transition-opacity ease-linear duration-300"
-                From: "opacity-0"
-                To: "opacity-100"
-              Leaving: "transition-opacity ease-linear duration-300"
-                From: "opacity-100"
-                To: "opacity-0"
-            */}
-            <div className="fixed inset-0">
-              <div
-                className="absolute inset-0 bg-gray-600 opacity-75"
-                aria-hidden="true"
-              />
-            </div>
-            {/*
-    Off-canvas menu, show/hide based on off-canvas menu state.
-
-    Entering: "transition ease-in-out duration-300 transform"
-      From: "-translate-x-full"
-      To: "translate-x-0"
-    Leaving: "transition ease-in-out duration-300 transform"
-      From: "translate-x-0"
-      To: "-translate-x-full"
-  */}
-            <div className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-cyan-700">
-              <div className="absolute top-0 right-0 -mr-12 pt-2">
-                <button
-                  className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-                  onClick={toggleMobileNavbarSet}
-                >
-                  <span className="sr-only">Close sidebar</span>
-                  {/* Heroicon name: outline/x */}
-                  <svg
-                    className="h-6 w-6 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="flex-shrink-0 flex items-center px-4">
-                <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/easywire-logo-cyan-300-mark-white-text.svg"
-                  alt="Easywire logo"
+        <Transition
+          show={navBarMobileToggle}
+          enter="transition-opacity ease-linear duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity ease-linear duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          {(ref) => (
+            <div className="fixed inset-0 flex z-40">
+              <div ref={ref} className="fixed inset-0">
+                <div
+                  className="absolute inset-0 bg-gray-600 opacity-75"
+                  aria-hidden="true"
                 />
               </div>
-              <nav
-                className="mt-5 flex-shrink-0 h-full divide-y divide-cyan-800 overflow-y-auto"
-                aria-label="Sidebar"
+              <Transition
+                show={navBarMobileToggle}
+                enter="transition ease-in-out duration-300 transform"
+                enterFrom="-translate-x-full"
+                enterTo="translate-x-0"
+                leave="transition ease-in-out duration-300 transform"
+                leaveFrom="translate-x-0"
+                leaveTo="-translate-x-full"
               >
-                <div className="px-2 space-y-1">
-                  {/* Current: "bg-cyan-800 text-white", Default: "text-cyan-100 hover:text-white hover:bg-cyan-600" */}
-                  <a
-                    href="#"
-                    className="bg-cyan-800 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                    aria-current="page"
+                {(ref) => (
+                  <div
+                    ref={ref}
+                    className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-cyan-700"
                   >
-                    {/* Heroicon name: outline/home */}
-                    <svg
-                      className="mr-4 h-6 w-6 text-cyan-200"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                      />
-                    </svg>
-                    Home
-                  </a>
-                  <a
-                    href="#"
-                    className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                  >
-                    {/* Heroicon name: outline/clock */}
-                    <svg
-                      className="mr-4 h-6 w-6 text-cyan-200"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    History
-                  </a>
-                  <a
-                    href="#"
-                    className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                  >
-                    {/* Heroicon name: outline/scale */}
-                    <svg
-                      className="mr-4 h-6 w-6 text-cyan-200"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
-                      />
-                    </svg>
-                    Balances
-                  </a>
-                  <a
-                    href="#"
-                    className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                  >
-                    {/* Heroicon name: outline/credit-card */}
-                    <svg
-                      className="mr-4 h-6 w-6 text-cyan-200"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                      />
-                    </svg>
-                    Cards
-                  </a>
-                  <a
-                    href="#"
-                    className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                  >
-                    {/* Heroicon name: outline/user-group */}
-                    <svg
-                      className="mr-4 h-6 w-6 text-cyan-200"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
-                    Recipients
-                  </a>
-                  <a
-                    href="#"
-                    className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                  >
-                    {/* Heroicon name: outline/document-report */}
-                    <svg
-                      className="mr-4 h-6 w-6 text-cyan-200"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      />
-                    </svg>
-                    Reports
-                  </a>
-                </div>
-                <div className="mt-6 pt-6">
-                  <div className="px-2 space-y-1">
-                    <a
-                      href="#"
-                      className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
-                    >
-                      {/* Heroicon name: outline/cog */}
-                      <svg
-                        className="mr-4 h-6 w-6 text-cyan-200 group-hover:text-cyan-200"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        aria-hidden="true"
+                    <div className="absolute top-0 right-0 -mr-12 pt-2">
+                      <button
+                        onClick={navBarMobileToggleSet}
+                        className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      Settings
-                    </a>
-                    <a
-                      href="#"
-                      className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
+                        <span className="sr-only">Close sidebar</span>
+                        {/* Heroicon name: outline/x */}
+                        <svg
+                          className="h-6 w-6 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="flex-shrink-0 flex items-center px-4">
+                      <img
+                        className="h-8 w-auto"
+                        src="https://tailwindui.com/img/logos/easywire-logo-cyan-300-mark-white-text.svg"
+                        alt="Easywire logo"
+                      />
+                    </div>
+                    <nav
+                      className="mt-5 flex-shrink-0 h-full divide-y divide-cyan-800 overflow-y-auto"
+                      aria-label="Sidebar"
                     >
-                      {/* Heroicon name: outline/question-mark-circle */}
-                      <svg
-                        className="mr-4 h-6 w-6 text-cyan-300 group-hover:text-cyan-200"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      Help
-                    </a>
-                    <a
-                      href="#"
-                      className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
-                    >
-                      {/* Heroicon name: outline/shield-check */}
-                      <svg
-                        className="mr-4 h-6 w-6 text-cyan-300 group-hover:text-cyan-200"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                        />
-                      </svg>
-                      Privacy
-                    </a>
+                      <div className="px-2 space-y-1">
+                        {/* Current: "bg-cyan-800 text-white", Default: "text-cyan-100 hover:text-white hover:bg-cyan-600" */}
+                        <a
+                          href="#"
+                          className="bg-cyan-800 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                          aria-current="page"
+                        >
+                          {/* Heroicon name: outline/home */}
+                          <svg
+                            className="mr-4 h-6 w-6 text-cyan-200"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                            />
+                          </svg>
+                          Home
+                        </a>
+                        <a
+                          href="#"
+                          className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                        >
+                          {/* Heroicon name: outline/clock */}
+                          <svg
+                            className="mr-4 h-6 w-6 text-cyan-200"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          History
+                        </a>
+                        <a
+                          href="#"
+                          className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                        >
+                          {/* Heroicon name: outline/scale */}
+                          <svg
+                            className="mr-4 h-6 w-6 text-cyan-200"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
+                            />
+                          </svg>
+                          Balances
+                        </a>
+                        <a
+                          href="#"
+                          className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                        >
+                          {/* Heroicon name: outline/credit-card */}
+                          <svg
+                            className="mr-4 h-6 w-6 text-cyan-200"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                            />
+                          </svg>
+                          Cards
+                        </a>
+                        <a
+                          href="#"
+                          className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                        >
+                          {/* Heroicon name: outline/user-group */}
+                          <svg
+                            className="mr-4 h-6 w-6 text-cyan-200"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                            />
+                          </svg>
+                          Recipients
+                        </a>
+                        <a
+                          href="#"
+                          className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                        >
+                          {/* Heroicon name: outline/document-report */}
+                          <svg
+                            className="mr-4 h-6 w-6 text-cyan-200"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                          </svg>
+                          Reports
+                        </a>
+                      </div>
+                      <div className="mt-6 pt-6">
+                        <div className="px-2 space-y-1">
+                          <a
+                            href="#"
+                            className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
+                          >
+                            {/* Heroicon name: outline/cog */}
+                            <svg
+                              className="mr-4 h-6 w-6 text-cyan-200 group-hover:text-cyan-200"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                            </svg>
+                            Settings
+                          </a>
+                          <a
+                            href="#"
+                            className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
+                          >
+                            {/* Heroicon name: outline/question-mark-circle */}
+                            <svg
+                              className="mr-4 h-6 w-6 text-cyan-300 group-hover:text-cyan-200"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                            Help
+                          </a>
+                          <a
+                            href="#"
+                            className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
+                          >
+                            {/* Heroicon name: outline/shield-check */}
+                            <svg
+                              className="mr-4 h-6 w-6 text-cyan-300 group-hover:text-cyan-200"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                              />
+                            </svg>
+                            Privacy
+                          </a>
+                        </div>
+                      </div>
+                    </nav>
                   </div>
-                </div>
-              </nav>
+                )}
+              </Transition>
+              <div className="flex-shrink-0 w-14" aria-hidden="true">
+                {/* Dummy element to force sidebar to shrink to fit close icon */}
+              </div>
             </div>
-            <div className="flex-shrink-0 w-14" aria-hidden="true">
-              {/* Dummy element to force sidebar to shrink to fit close icon */}
-            </div>
-          </div>
-        )}
+          )}
+        </Transition>
       </div>
       {/* Static sidebar for desktop */}
       <div className="hidden lg:flex lg:flex-shrink-0">
@@ -532,8 +541,8 @@ function Dashboard(props) {
       <div className="flex-1 overflow-auto focus:outline-none" tabIndex={0}>
         <div className="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200 lg:border-none">
           <button
+            onClick={navBarMobileToggleSet}
             className="px-4 border-r border-gray-200 text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500 lg:hidden"
-            onClick={toggleMobileNavbarSet}
           >
             <span className="sr-only">Open sidebar</span>
             {/* Heroicon name: outline/menu-alt-1 */}
@@ -617,18 +626,16 @@ function Dashboard(props) {
                     className="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50"
                     id="user-menu"
                     aria-haspopup="true"
-                    onClick={headerProfileDropdownSet}
+                    onClick={userDropdownToggleSet}
                   >
                     <img
                       className="h-8 w-8 rounded-full"
-                      src={
-                        user && user.picture && !loading ? user.picture : null
-                      }
-                      alt={user && user.name && !loading ? user.name : null}
+                      src={userImage}
+                      alt={userName}
                     />
                     <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
                       <span className="sr-only">Open user menu for </span>
-                      {user && user.name && !loading ? user.name : null}
+                      {userName}
                     </span>
                     {/* Heroicon name: solid/chevron-down */}
                     <svg
@@ -646,46 +653,50 @@ function Dashboard(props) {
                     </svg>
                   </button>
                 </div>
-                {/*
-          Profile dropdown panel, show/hide based on dropdown state.
 
-          Entering: "transition ease-out duration-100"
-            From: "transform opacity-0 scale-95"
-            To: "transform opacity-100 scale-100"
-          Leaving: "transition ease-in duration-75"
-            From: "transform opacity-100 scale-100"
-            To: "transform opacity-0 scale-95"
-        */}
-                {headerProfileDropdown && (
-                  <div
-                    className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
-                    role="menu"
-                    aria-orientation="vertical"
-                    aria-labelledby="user-menu"
-                  >
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      role="menuitem"
+                <Transition
+                  show={userDropdownToggle}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  {(ref) => (
+                    <div
+                      ref={ref}
+                      className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="user-menu"
                     >
-                      Your Profile
-                    </a>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      role="menuitem"
-                    >
-                      Settings
-                    </a>
-                    <a
-                      href="/api/logout"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      role="menuitem"
-                    >
-                      Logout
-                    </a>
-                  </div>
-                )}
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                      >
+                        Your Profile
+                      </a>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                      >
+                        Settings
+                      </a>
+                      <Link href="/api/logout">
+                        <a
+                          // href="#"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          role="menuitem"
+                        >
+                          Logout
+                        </a>
+                      </Link>
+                    </div>
+                  )}
+                </Transition>
               </div>
             </div>
           </div>
@@ -700,25 +711,18 @@ function Dashboard(props) {
                   <div className="flex items-center">
                     <img
                       className="hidden h-16 w-16 rounded-full sm:block"
-                      src={
-                        user && user.picture && !loading ? user.picture : null
-                      }
-                      alt={user && user.name && !loading ? user.name : null}
+                      src={userImage}
+                      alt={userName}
                     />
                     <div>
                       <div className="flex items-center">
                         <img
                           className="h-16 w-16 rounded-full sm:hidden"
-                          src={
-                            user && user.picture && !loading
-                              ? user.picture
-                              : null
-                          }
-                          alt={user && user.name && !loading ? user.name : null}
+                          src={userImage}
+                          alt={userName}
                         />
                         <h1 className="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
-                          Good morning,{" "}
-                          {user && user.name && !loading ? user.name : null}
+                          Good morning, {userName}
                         </h1>
                       </div>
                       <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
@@ -786,98 +790,6 @@ function Dashboard(props) {
               </h2>
               <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {/* Card */}
-                <div className="bg-white overflow-hidden shadow rounded-lg">
-                  <div className="p-5">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0">
-                        {/* Heroicon name: outline/scale */}
-                        <svg
-                          className="h-6 w-6 text-gray-400"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
-                          />
-                        </svg>
-                      </div>
-                      <div className="ml-5 w-0 flex-1">
-                        <dl>
-                          <dt className="text-sm font-medium text-gray-500 truncate">
-                            Account balance
-                          </dt>
-                          <dd>
-                            <div className="text-lg font-medium text-gray-900">
-                              $30,659.45
-                            </div>
-                          </dd>
-                        </dl>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 px-5 py-3">
-                    <div className="text-sm">
-                      <a
-                        href="#"
-                        className="font-medium text-cyan-700 hover:text-cyan-900"
-                      >
-                        View all
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white overflow-hidden shadow rounded-lg">
-                  <div className="p-5">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0">
-                        {/* Heroicon name: outline/scale */}
-                        <svg
-                          className="h-6 w-6 text-gray-400"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
-                          />
-                        </svg>
-                      </div>
-                      <div className="ml-5 w-0 flex-1">
-                        <dl>
-                          <dt className="text-sm font-medium text-gray-500 truncate">
-                            Account balance
-                          </dt>
-                          <dd>
-                            <div className="text-lg font-medium text-gray-900">
-                              $30,659.45
-                            </div>
-                          </dd>
-                        </dl>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 px-5 py-3">
-                    <div className="text-sm">
-                      <a
-                        href="#"
-                        className="font-medium text-cyan-700 hover:text-cyan-900"
-                      >
-                        View all
-                      </a>
-                    </div>
-                  </div>
-                </div>
                 <div className="bg-white overflow-hidden shadow rounded-lg">
                   <div className="p-5">
                     <div className="flex items-center">
@@ -1081,9 +993,13 @@ function Dashboard(props) {
                     >
                       <div className="hidden sm:block">
                         <p className="text-sm text-gray-700">
-                          Showing <span className="font-medium">1</span> to{" "}
-                          <span className="font-medium">10</span> of{" "}
-                          <span className="font-medium">20</span> results
+                          Showing
+                          <span className="font-medium">1</span>
+                          to
+                          <span className="font-medium">10</span>
+                          of
+                          <span className="font-medium">20</span>
+                          results
                         </p>
                       </div>
                       <div className="flex-1 flex justify-between sm:justify-end">
