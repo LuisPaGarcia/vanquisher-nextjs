@@ -3,7 +3,7 @@ import useDocumentTitle from "utils/hooks/useDocumentTitle";
 import Hero from "./Hero";
 
 function Landing() {
-  useDocumentTitle("Vanquisher");
+  // useDocumentTitle("Vanquisher");
   return <Hero />;
 }
 
