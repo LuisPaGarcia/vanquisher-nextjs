@@ -6,6 +6,7 @@ import { useRef, useEffect } from "react";
  * @param {boolean} prevailOnUnmount value to define if the title must prevail
  */
 function useDocumentTitle(title, prevailOnUnmount = false) {
+  if (typeof window === "undefined") return;
   const defaultTitle = useRef(document.title);
 
   useEffect(() => {
