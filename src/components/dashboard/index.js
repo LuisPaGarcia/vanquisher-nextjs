@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useContext } from "react";
 import useDocumentTitle from "utils/hooks/useDocumentTitle";
 import useToggle from "utils/hooks/useToggle";
 import { useFetchUser } from "utils/user";
 import { Transition } from "@headlessui/react";
 import Link from "next/link";
+import DashbordContext from "context";
 
 function Dashboard(props) {
   useDocumentTitle("Dashboard | Vanquisher");
@@ -12,7 +13,13 @@ function Dashboard(props) {
   const { user, loading } = useFetchUser();
   const userImage = !loading && user && user.picture ? user.picture : null;
   const userName = !loading && user && user.name ? user.name : null;
-
+  const dashboardContext = useContext(DashbordContext);
+  useEffect(() => {
+    console.log(dashboardContext);
+    dashboardContext.fetch.data().then((data) => {
+      console.log(data.data);
+    });
+  }, []);
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100">
       {/* Off-canvas menu for mobile, show/hide based on off-canvas menu state. */}
