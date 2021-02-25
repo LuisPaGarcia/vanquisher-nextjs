@@ -1,28 +1,43 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import useDocumentTitle from "utils/hooks/useDocumentTitle";
 import useToggle from "utils/hooks/useToggle";
 import { useFetchUser } from "utils/user";
 import { Transition } from "@headlessui/react";
 import Link from "next/link";
 import DashbordContext from "context";
+import sidebarItems from "./sidebarConfig";
+import Home from "./Home";
+import Router from "./Router";
+import { useRouter } from "next/router";
 
-function Dashboard(props) {
+function Dashboard() {
   useDocumentTitle("Dashboard | Vanquisher");
   const [navBarMobileToggle, navBarMobileToggleSet] = useToggle(); // navbarMobile
   const [userDropdownToggle, userDropdownToggleSet] = useToggle(); // userDropdown
+  const defaultItemSelected = sidebarItems.pages[0].text;
+  const [menuSelection, menuSelectionSet] = useState(defaultItemSelected); // sideBarMenuSelection
+
   const { user, loading } = useFetchUser();
   const userImage = !loading && user && user.picture ? user.picture : null;
   const userName = !loading && user && user.name ? user.name : null;
   const dashboardContext = useContext(DashbordContext);
+  const router = useRouter();
+  const handleClickSidebarItems = (event) => {
+    const id = event.target.id;
+    menuSelectionSet(id);
+    const path = sidebarItems.pages.find((item) => item.text === id).path;
+    router.push(`/dashboard/?page=${path}`, undefined, { shallow: true });
+  };
+
   useEffect(() => {
     console.log(dashboardContext);
     dashboardContext.fetch.data().then((data) => {
       console.log(data.data);
     });
   }, []);
+
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100">
-      {/* Off-canvas menu for mobile, show/hide based on off-canvas menu state. */}
       <div className="lg:hidden">
         <Transition
           show={navBarMobileToggle}
@@ -91,140 +106,23 @@ function Dashboard(props) {
                       aria-label="Sidebar"
                     >
                       <div className="px-2 space-y-1">
-                        {/* Current: "bg-cyan-800 text-white", Default: "text-cyan-100 hover:text-white hover:bg-cyan-600" */}
-                        <a
-                          href="#"
-                          className="bg-cyan-800 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                          aria-current="page"
-                        >
-                          {/* Heroicon name: outline/home */}
-                          <svg
-                            className="mr-4 h-6 w-6 text-cyan-200"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            aria-hidden="true"
+                        {sidebarItems.pages.map((item) => (
+                          <a
+                            key={item.text}
+                            id={item.text}
+                            onClick={handleClickSidebarItems}
+                            href="#"
+                            className={`${
+                              menuSelection === item.text
+                                ? "bg-cyan-800 text-white"
+                                : "text-cyan-100 hover:text-white hover:bg-cyan-600"
+                            } group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md`}
+                            aria-current="page"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                            />
-                          </svg>
-                          Home
-                        </a>
-                        <a
-                          href="#"
-                          className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                        >
-                          {/* Heroicon name: outline/clock */}
-                          <svg
-                            className="mr-4 h-6 w-6 text-cyan-200"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                          History
-                        </a>
-                        <a
-                          href="#"
-                          className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                        >
-                          {/* Heroicon name: outline/scale */}
-                          <svg
-                            className="mr-4 h-6 w-6 text-cyan-200"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
-                            />
-                          </svg>
-                          Balances
-                        </a>
-                        <a
-                          href="#"
-                          className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                        >
-                          {/* Heroicon name: outline/credit-card */}
-                          <svg
-                            className="mr-4 h-6 w-6 text-cyan-200"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                            />
-                          </svg>
-                          Cards
-                        </a>
-                        <a
-                          href="#"
-                          className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                        >
-                          {/* Heroicon name: outline/user-group */}
-                          <svg
-                            className="mr-4 h-6 w-6 text-cyan-200"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                            />
-                          </svg>
-                          Recipients
-                        </a>
-                        <a
-                          href="#"
-                          className="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                        >
-                          {/* Heroicon name: outline/document-report */}
-                          <svg
-                            className="mr-4 h-6 w-6 text-cyan-200"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                            />
-                          </svg>
-                          Reports
-                        </a>
+                            {item.icon()}
+                            {item.text}
+                          </a>
+                        ))}
                       </div>
                       <div className="mt-6 pt-6">
                         <div className="px-2 space-y-1">
@@ -330,140 +228,23 @@ function Dashboard(props) {
               aria-label="Sidebar"
             >
               <div className="px-2 space-y-1">
-                {/* Current: "bg-cyan-800 text-white", Default: "text-cyan-100 hover:text-white hover:bg-cyan-600" */}
-                <a
-                  href="#"
-                  className="bg-cyan-800 text-white group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md"
-                  aria-current="page"
-                >
-                  {/* Heroicon name: outline/home */}
-                  <svg
-                    className="mr-4 h-6 w-6 text-cyan-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
+                {sidebarItems.pages.map((item) => (
+                  <a
+                    href="#"
+                    key={item.text}
+                    aria-current={item.text}
+                    id={item.text}
+                    onClick={handleClickSidebarItems}
+                    className={`${
+                      menuSelection === item.text
+                        ? "bg-cyan-800 text-white"
+                        : "text-cyan-100 hover:text-white hover:bg-cyan-600"
+                    } group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md`}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                    />
-                  </svg>
-                  Home
-                </a>
-                <a
-                  href="#"
-                  className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
-                >
-                  {/* Heroicon name: outline/clock */}
-                  <svg
-                    className="mr-4 h-6 w-6 text-cyan-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  History
-                </a>
-                <a
-                  href="#"
-                  className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
-                >
-                  {/* Heroicon name: outline/scale */}
-                  <svg
-                    className="mr-4 h-6 w-6 text-cyan-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
-                    />
-                  </svg>
-                  Balances
-                </a>
-                <a
-                  href="#"
-                  className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
-                >
-                  {/* Heroicon name: outline/credit-card */}
-                  <svg
-                    className="mr-4 h-6 w-6 text-cyan-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                    />
-                  </svg>
-                  Cards
-                </a>
-                <a
-                  href="#"
-                  className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
-                >
-                  {/* Heroicon name: outline/user-group */}
-                  <svg
-                    className="mr-4 h-6 w-6 text-cyan-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                  Recipients
-                </a>
-                <a
-                  href="#"
-                  className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
-                >
-                  {/* Heroicon name: outline/document-report */}
-                  <svg
-                    className="mr-4 h-6 w-6 text-cyan-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  Reports
-                </a>
+                    {item.icon()}
+                    {item.text}
+                  </a>
+                ))}
               </div>
               <div className="mt-6 pt-6">
                 <div className="px-2 space-y-1">
@@ -708,328 +489,11 @@ function Dashboard(props) {
             </div>
           </div>
         </div>
-        <main className="flex-1 relative pb-8 z-0 overflow-y-auto">
-          {/* Page header */}
-          <div className="bg-white shadow">
-            <div className="px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-              <div className="py-6 md:flex md:items-center md:justify-between lg:border-t lg:border-gray-200">
-                <div className="flex-1 min-w-0">
-                  {/* Profile */}
-                  <div className="flex items-center">
-                    <img
-                      className="hidden h-16 w-16 rounded-full sm:block"
-                      src={userImage}
-                      alt={userName}
-                    />
-                    <div>
-                      <div className="flex items-center">
-                        <img
-                          className="h-16 w-16 rounded-full sm:hidden"
-                          src={userImage}
-                          alt={userName}
-                        />
-                        <h1 className="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
-                          Good morning, {userName}
-                        </h1>
-                      </div>
-                      <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
-                        <dt className="sr-only">Company</dt>
-                        <dd className="flex items-center text-sm text-gray-500 font-medium capitalize sm:mr-6">
-                          {/* Heroicon name: solid/office-building */}
-                          <svg
-                            className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          Duke street studio
-                        </dd>
-                        <dt className="sr-only">Account status</dt>
-                        <dd className="mt-3 flex items-center text-sm text-gray-500 font-medium sm:mr-6 sm:mt-0 capitalize">
-                          {/* Heroicon name: solid/check-circle */}
-                          <svg
-                            className="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          Verified account
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6 flex space-x-3 md:mt-0 md:ml-4">
-                  <button
-                    type="button"
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
-                  >
-                    Add money
-                  </button>
-                  <button
-                    type="button"
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
-                  >
-                    Send money
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-8">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-lg leading-6 font-medium text-gray-900">
-                Overview
-              </h2>
-              <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {/* Card */}
-                <div className="bg-white overflow-hidden shadow rounded-lg">
-                  <div className="p-5">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0">
-                        {/* Heroicon name: outline/scale */}
-                        <svg
-                          className="h-6 w-6 text-gray-400"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
-                          />
-                        </svg>
-                      </div>
-                      <div className="ml-5 w-0 flex-1">
-                        <dl>
-                          <dt className="text-sm font-medium text-gray-500 truncate">
-                            Account balance
-                          </dt>
-                          <dd>
-                            <div className="text-lg font-medium text-gray-900">
-                              $30,659.45
-                            </div>
-                          </dd>
-                        </dl>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 px-5 py-3">
-                    <div className="text-sm">
-                      <a
-                        href="#"
-                        className="font-medium text-cyan-700 hover:text-cyan-900"
-                      >
-                        View all
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                {/* More items... */}
-              </div>
-            </div>
-            <h2 className="max-w-6xl mx-auto mt-8 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
-              Recent activity
-            </h2>
-            {/* Activity list (smallest breakopoint only) */}
-            <div className="shadow sm:hidden">
-              <ul className="mt-2 divide-y divide-gray-200 overflow-hidden shadow sm:hidden">
-                <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-4 bg-white hover:bg-gray-50"
-                  >
-                    <span className="flex items-center space-x-4">
-                      <span className="flex-1 flex space-x-2 truncate">
-                        {/* Heroicon name: solid/cash */}
-                        <svg
-                          className="flex-shrink-0 h-5 w-5 text-gray-400"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span className="flex flex-col text-gray-500 text-sm truncate">
-                          <span className="truncate">
-                            Payment to Molly Sanders
-                          </span>
-                          <span>
-                            <span className="text-gray-900 font-medium">
-                              $20,000
-                            </span>{" "}
-                            USD
-                          </span>
-                          <span>July 11, 2020</span>
-                        </span>
-                      </span>
-                      {/* Heroicon name: solid/chevron-right */}
-                      <svg
-                        className="flex-shrink-0 h-5 w-5 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </a>
-                </li>
-                {/* More items... */}
-              </ul>
-              <nav
-                className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200"
-                aria-label="Pagination"
-              >
-                <div className="flex-1 flex justify-between">
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:text-gray-500"
-                  >
-                    Previous
-                  </a>
-                  <a
-                    href="#"
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:text-gray-500"
-                  >
-                    Next
-                  </a>
-                </div>
-              </nav>
-            </div>
-            {/* Activity table (small breakopoint and up) */}
-            <div className="hidden sm:block">
-              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col mt-2">
-                  <div className="align-middle min-w-full overflow-x-auto shadow overflow-hidden sm:rounded-lg">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead>
-                        <tr>
-                          <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Transaction
-                          </th>
-                          <th className="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Amount
-                          </th>
-                          <th className="hidden px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider md:block">
-                            Status
-                          </th>
-                          <th className="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Date
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        <tr className="bg-white">
-                          <td className="max-w-0 w-full px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <div className="flex">
-                              <a
-                                href="#"
-                                className="group inline-flex space-x-2 truncate text-sm"
-                              >
-                                {/* Heroicon name: solid/cash */}
-                                <svg
-                                  className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 20 20"
-                                  fill="currentColor"
-                                  aria-hidden="true"
-                                >
-                                  <path
-                                    fillRule="evenodd"
-                                    d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                                    clipRule="evenodd"
-                                  />
-                                </svg>
-                                <p className="text-gray-500 truncate group-hover:text-gray-900">
-                                  Payment to Molly Sanders
-                                </p>
-                              </a>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-right whitespace-nowrap text-sm text-gray-500">
-                            <span className="text-gray-900 font-medium">
-                              $20,000{" "}
-                            </span>
-                            USD
-                          </td>
-                          <td className="hidden px-6 py-4 whitespace-nowrap text-sm text-gray-500 md:block">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
-                              success
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-right whitespace-nowrap text-sm text-gray-500">
-                            July 11, 2020
-                          </td>
-                        </tr>
-                        {/* More items... */}
-                      </tbody>
-                    </table>
-                    {/* Pagination */}
-                    <nav
-                      className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
-                      aria-label="Pagination"
-                    >
-                      <div className="hidden sm:block">
-                        <p className="text-sm text-gray-700">
-                          Showing
-                          <span className="font-medium">1</span>
-                          to
-                          <span className="font-medium">10</span>
-                          of
-                          <span className="font-medium">20</span>
-                          results
-                        </p>
-                      </div>
-                      <div className="flex-1 flex justify-between sm:justify-end">
-                        <a
-                          href="#"
-                          className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                        >
-                          Previous
-                        </a>
-                        <a
-                          href="#"
-                          className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                        >
-                          Next
-                        </a>
-                      </div>
-                    </nav>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
+        <Router>
+          <Home page="home" userImage={userImage} userName={userName} />
+          <h1>Hola</h1>
+          <h1>Hola</h1>
+        </Router>
       </div>
     </div>
   );
