@@ -314,32 +314,31 @@ To: "opacity-0 scale-95"
                       </div>
                       <div className="mt-6">
                         <nav className="grid grid-cols-1 gap-7">
-                          <a
-                            href="#"
-                            className="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-50"
-                          >
-                            <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-md bg-indigo-600 text-white">
-                              {/* Heroicon name: outline/inbox */}
-                              <svg
-                                className="h-6 w-6"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                aria-hidden="true"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-                                />
-                              </svg>
-                            </div>
-                            <div className="ml-4 text-base font-medium text-gray-900">
-                              Inbox
-                            </div>
-                          </a>
+                          <Link href="/api/login">
+                            <a className="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-50">
+                              <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-md bg-indigo-600 text-white">
+                                {/* Heroicon name: outline/inbox */}
+                                <svg
+                                  className="h-6 w-6"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                  aria-hidden="true"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                                  />
+                                </svg>
+                              </div>
+                              <div className="ml-4 text-base font-medium text-gray-900">
+                                Login
+                              </div>
+                            </a>
+                          </Link>
                           <a
                             href="#"
                             className="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-50"
@@ -498,18 +497,16 @@ To: "opacity-0 scale-95"
                     </p>
                     <div className="mt-10 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center">
                       <div className="space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5">
-                        <a
-                          href="#"
-                          className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-indigo-700 bg-white hover:bg-indigo-50 sm:px-8"
-                        >
-                          Get started
-                        </a>
-                        <a
-                          href="#"
-                          className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-500 bg-opacity-60 hover:bg-opacity-70 sm:px-8"
-                        >
-                          Live demo
-                        </a>
+                        <Link href="/api/login">
+                          <a className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-indigo-700 bg-white hover:bg-indigo-50 sm:px-8">
+                            Get started
+                          </a>
+                        </Link>
+                        <Link href="/api/login">
+                          <a className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-500 bg-opacity-60 hover:bg-opacity-70 sm:px-8">
+                            Log In
+                          </a>
+                        </Link>
                       </div>
                     </div>
                   </div>

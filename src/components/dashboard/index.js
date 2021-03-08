@@ -7,6 +7,7 @@ import Link from "next/link";
 import DashbordContext from "context";
 import sidebarItems from "./sidebarConfig";
 import Home from "./Home";
+import MarketList from "../MarketList";
 import Router from "./Router";
 import { useRouter } from "next/router";
 
@@ -491,8 +492,8 @@ function Dashboard() {
         </div>
         <Router>
           <Home page="home" userImage={userImage} userName={userName} />
-          <h1>Hola</h1>
-          <h1>Hola</h1>
+          <h1 className="hidden">Hola</h1>
+          <MarketList />
         </Router>
       </div>
     </div>

@@ -8,6 +8,8 @@ module.exports = {
     redirectUri: process.env.redirectUri,
     postLogoutRedirectUri: process.env.postLogoutRedirectUri,
     cookieSecret: process.env.cookieSecret,
+    githubToken: process.env.githubToken,
+    gistId: process.env.gistId,
   },
   timeout: 1000000,
 };
