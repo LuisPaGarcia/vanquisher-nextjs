@@ -58,9 +58,9 @@ function MarketList() {
   return (
     <div className="pb-4">
       <List>
-        {list.map((item) => (
+        {list.map((item, index) => (
           <ListItem
-            key={item.description}
+            key={`${item.description}-${index}`}
             picture={item.picture}
             name={item.name}
             description={item.description}
