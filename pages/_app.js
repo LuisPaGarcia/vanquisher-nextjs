@@ -15,7 +15,7 @@ function App({ Component, pageProps }) {
 
   return (
     <DashboardContext.Provider value={{ flag, flagToggle, fetch: { data } }}>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </DashboardContext.Provider>
   );
 }
