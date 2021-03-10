@@ -11,7 +11,7 @@ function NewItemForm({
   const isActive = Boolean(itemDescription.trim());
   return (
     <>
-      <div className="mt-4 mb-8">
+      <div className="mt-4 mb-4">
         <form
           onSubmit={handleSubmit}
           className="space-y-2 divide-y divide-gray-200"
