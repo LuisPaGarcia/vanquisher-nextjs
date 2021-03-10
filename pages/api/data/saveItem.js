@@ -1,5 +1,5 @@
 import { GistDB } from "gist-io";
-
+import generateId from "utils/generateId";
 const db = new GistDB({
   token: process.env.githubToken,
 });
@@ -7,6 +7,7 @@ const db = new GistDB({
 export default async function handler(req, res) {
   const newItem = req.body;
   newItem.active = true;
+  newItem._id = generateId();
 
   const content = await db.get({
     gistId: process.env.gistId,

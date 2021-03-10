@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import noop from "utils/noop";
 
 function ListItem({ picture, name, timeStamp, description }) {
   const [checked, checkedSet] = useState(false);
 
   const handleClickCheck = () => {
-    console.log("hey");
     checkedSet(!checked);
   };
 
@@ -16,19 +16,16 @@ function ListItem({ picture, name, timeStamp, description }) {
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-medium">{name}</h3>
           </div>
-          <p className="text-sm text-gray-500 flex justify-between">
+          <p className="text-md text-gray-500 flex justify-between">
             {description}
-
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                className="form-checkbox"
-                onChange={handleClickCheck}
-                checked={checked}
-              />
-            </label>
           </p>
         </div>
+        <input
+          type="checkbox"
+          className="form-checkbox h-7 w-7"
+          onChange={noop}
+          checked={checked}
+        />
       </div>
     </li>
   );

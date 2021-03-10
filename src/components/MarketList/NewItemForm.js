@@ -8,10 +8,10 @@ function NewItemForm({
   inputRef,
   loading,
 }) {
-  const isActive = Boolean(itemDescription);
+  const isActive = Boolean(itemDescription.trim());
   return (
     <>
-      <div className="mx-4 mt-4 mb-8">
+      <div className="mt-4 mb-8">
         <form
           onSubmit={handleSubmit}
           className="space-y-2 divide-y divide-gray-200"
@@ -22,7 +22,7 @@ function NewItemForm({
                 htmlFor="description"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
               >
-                Description
+                Descripción
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
                 <input

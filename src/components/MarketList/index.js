@@ -6,11 +6,13 @@ import { useFetchUser } from "utils/user";
 import redaxios from "redaxios";
 
 function MarketList() {
+  let pendingUpdate = false;
   const [list, listSet] = useState([]);
   const [itemDescription, itemDescriptionSet] = useState("");
   const [loading, loadingSet] = useState(false);
   const { user, loading: isLoading } = useFetchUser();
   const inputRef = useRef(null);
+
   const getList = async () => {
     try {
       const response = await redaxios.get("/api/data/getList");
@@ -23,13 +25,12 @@ function MarketList() {
   const handleChange = (event) => itemDescriptionSet(event.target.value);
   const handleSubmit = async (event) => {
     event.preventDefault();
-    //save
+    if (!itemDescription.trim()) return;
     await saveItem({
       name: user.name,
       picture: user.picture,
       description: itemDescription,
     });
-    //fetch list
     itemDescriptionSet("");
     inputRef.current.focus();
   };
@@ -50,17 +51,23 @@ function MarketList() {
     }
   };
 
+  // checkTask = () => {
+  //   try {
+  //   } catch (error) {}
+  // };
+
   useEffect(() => {
     inputRef.current.focus();
     getList();
   }, []);
 
   return (
-    <div className="pb-4">
+    <div className="px-4 py-4">
+      <h1 className="text-2xl font-bold pb-4">Lista de compras</h1>
       <List>
-        {list.map((item, index) => (
+        {list.map((item) => (
           <ListItem
-            key={`${item.description}-${index}`}
+            key={item._id}
             picture={item.picture}
             name={item.name}
             description={item.description}

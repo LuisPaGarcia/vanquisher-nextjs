@@ -1,11 +1,7 @@
 import React from "react";
 
 function MarketList({ children }) {
-  return (
-    <div className="container px-4">
-      <ul className="divide-y divide-gray-200">{children}</ul>
-    </div>
-  );
+  return <ul className="divide-y divide-gray-200">{children}</ul>;
 }
 
 export default MarketList;
